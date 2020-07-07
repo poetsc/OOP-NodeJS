@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oop</title>
+</head>
+
+<body>
+    <p><span id="duration">0</span> s</p>
+    <button id="start_btn" class="control">start</button>
+    <button id="stop_btn" class="control">stop</button>
+    <button id="reset_btn" class="control">reset</button>
+    <script>
+        /* 
+        面向对象
+        1.封装：组合相关变量、函数到局部作用域内，提高代码可维护性
+        2.抽象：隐藏具体细节、降低使用难度
+        3.继承：继承父类通用属性和方法、提高代码复用
+        4.多态：继承自同个父类的多个子类对同一方法有不同的实现，减少 switch case
+        */
+        function Timer() {
+            let start_time, stop_time, running, duration = 0;
+            this.start = function () {
+                if (running) {
+                    throw new Error('The timer is already running.');
+                }
+
+                running = true;
+                start_time = new Date();
+            }
+
+            this.stop = function () {
+                if (!running) {
+                    throw new Error('The timer is not running.');
+                }
+
+                running = false;
+                stop_time = new Date();
+                duration += Math.round((stop_time.getTime() - start_time.getTime()) / 1000);
+            }
+
+            this.reset = function () {
+                start_time = stop_time = null;
+                running = false;
+                duration = 0;
+            }
+
+            Object.defineProperty(this, 'duration', {
+                get: function () {
+                    return duration;
+                }
+            })
+        }
+
+        let timer = new Timer();
+
+        document.getElementById('start_btn').addEventListener('click', function (elem, event) {
+            timer.start();
+        });
+
+        document.getElementById('stop_btn').addEventListener('click', function (elem, event) {
+            timer.stop();
+            display_duration();
+        });
+
+        document.getElementById('reset_btn').addEventListener('click', function (elem, event) {
+            timer.reset();
+            display_duration();
+        });
+
+        function display_duration() {
+            document.getElementById('duration').textContent = timer.duration;
+        }
+    </script>
+</body>
+
+</html>
